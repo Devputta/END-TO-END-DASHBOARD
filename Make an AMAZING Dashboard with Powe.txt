@@ -1,0 +1,28 @@
+Make an AMAZING Dashboard with Power BI - End to End
+
+Police Count = COUNTROWS(policies) --> this is to count the number or polices (each rows is a police in the data table).
+
+Polices Opend = [Police Count] --> this is a duplicate file which have the police count to calculate the closed polices.
+
+Polices Closed = CALCULATE([Police Count], USERELATIONSHIP('calendar'[Date], policies[INSR_END])) --> this is to calculate the closed polices in insurance using police count and another function to trigger the relationship  using userelationship with calendar date and insurance end date (trigger the inactive relationship). 
+
+Total Premium = SUM(policies[PREMIUM]) --> this is to calculate the total premium in polices.
+
+Total Claim = SUM(policies[CLAIM_PAID]) --> this as same as premium.
+
+Avg. Premium = AVERAGE(policies[PREMIUM]) --> it will average the polices primum.
+
+Avg. Claim = AVERAGE(policies[CLAIM_PAID]) --> this is average of claimed Paid 
+
+Avg. Claim2 = DIVIDE([Total Claim], [Polices Opend]) --> another way to calculate the average claims.
+
+Premium to Claim Ratio = DIVIDE([Total Premium], [Total Claim]) --> it will calculate the ratio from premium to claim of the polices.
+
+Claim Count = CALCULATE([Police Count], policies[CLAIM_PAID]>0) --> this is to calculate the total number of claim as count using number of polices and  claim paid is grater then 0 (we are using this because somr column are blank) other wise we can use this formula --> claim count = countrowas(polices[claim_paid]).
+
+Barchart Lables = 
+    var v_t = SELECTEDVALUE(policies[TYPE_VEHICLE])
+    var Polices = FORMAT(policies[Polices Opend], "#,##0,.ok")
+    var pr = IF([Premium to Claim Ratio]<1 ,"x","y")
+RETURN
+    v_t & " "&  Polices & " " & pr  --> this is to collect data into single line selective values will be collected and format will format the data in to thousand and if will filter the number of opening  
